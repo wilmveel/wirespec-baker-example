@@ -1,6 +1,5 @@
 package community.flock.wirespec.baker.wirespecbaker
 
-import community.flock.wirespec.generated.Content
 import community.flock.wirespec.generated.ContentMapper
 import community.flock.wirespec.generated.GetIngredients
 import community.flock.wirespec.generated.Ingredient
@@ -29,13 +28,14 @@ class PizzaIngredientApiImpl(private val contentMapper: ContentMapper<String>) :
     val mapper = GetIngredients.RESPONSE_MAPPER(contentMapper)
 
     override fun apply(getIngredientsRequest: GetIngredients.GetIngredientsRequestUnit): GetIngredients.GetIngredientsResponse<*> {
-        return mapper(200, emptyMap(), Content("application/json", body))
+//        return mapper(200, emptyMap(), Content("application/json", body))
+        return mapper(404, emptyMap(), null)
     }
 }
 
 @Component
 class PizzaDeliveryImpl : PizzaDelivery {
-    override fun apply(pizzaId: String, body: List<Ingredient>): PizzaDelivery.PizzaPizzaSuccess {
+    override fun apply(pizzaId: String, body: List<Ingredient>): PizzaDelivery.PizzaSuccess {
         println(
             """
                 |---------------------------------------------
@@ -45,6 +45,19 @@ class PizzaDeliveryImpl : PizzaDelivery {
             """.trimMargin()
         )
 
-        return PizzaDelivery.PizzaPizzaSuccess
+        return PizzaDelivery.PizzaSuccess
     }
+}
+
+@Component
+class PizzaBinImpl : PizzaBin {
+    override fun apply(): PizzaBin.PizzaError {
+        println("""
+            |---------------------------------------------
+            |No Pizza for you!
+            |---------------------------------------------
+        """.trimMargin())
+        return PizzaBin.PizzaError
+    }
+
 }

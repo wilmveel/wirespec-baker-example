@@ -22,9 +22,15 @@ interface PizzaIngredientApi : Interaction {
 }
 
 interface PizzaDelivery : Interaction {
-    object PizzaPizzaSuccess
+    object PizzaSuccess
 
-    fun apply(pizzaId: String, body: List<Ingredient>): PizzaPizzaSuccess
+    fun apply(pizzaId: String, body: List<Ingredient>): PizzaSuccess
+}
+
+interface PizzaBin : Interaction {
+    object PizzaError
+
+    fun apply(): PizzaError
 }
 
 val recipe: Recipe = recipe("RecipeWithCheckpointEvent") {
@@ -36,6 +42,11 @@ val recipe: Recipe = recipe("RecipeWithCheckpointEvent") {
     interaction<PizzaDelivery> {
         requiredEvents {
             event<GetIngredients.GetIngredientsResponse200ApplicationJson>()
+        }
+    }
+    interaction<PizzaBin> {
+        requiredEvents {
+            event<GetIngredients.GetIngredientsResponse404Unit>()
         }
     }
 }
